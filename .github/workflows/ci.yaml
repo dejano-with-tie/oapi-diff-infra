@@ -1,0 +1,29 @@
+# inside .github/workflows/your-action.yml
+name: Add File to Bucket
+on: push
+env:
+  BUILT_BRANCH: master
+  ECR_REPOSITORY: magicskunk
+  AWS_REGION: eu-central-1
+  AWS_ROLE: arn:aws:iam::847775666541:role/github_actions_dejano-with-tie
+
+jobs:
+  openapi-spec:
+    runs-on: ubuntu-latest
+    # Adding the permissions to the job allows the action that gets the credentials from AWS to store
+    # them for use in further steps. The permission that is specifically required is id-token: write.
+    permissions:
+      id-token: write
+      contents: read # This is required for actions/checkout@v2
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.AWS_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Upload openapi spec to S3
+        run: |-
+          echo ${{ secrets.AWS_S3_BUCKET }}
+          aws s3 cp openapi-spec/petstore.yaml "s3://${{ secrets.AWS_S3_BUCKET }}/openapi-spec/"
