@@ -2,8 +2,6 @@
 
 > Track openapi spec changes with ease.
 
-### Concept
-
 ```mermaid
 sequenceDiagram
 
@@ -23,6 +21,8 @@ qadev -) s3: openapi spec diff
 qadev -) s3: openapi versioned spec
 ```
 
+
+> **Disclaimer**: this is just a proof of concept, don't mind the ugly. 
 ### Tools
 
 - [Swagger UI](https://swagger.io/tools/swagger-ui/)
