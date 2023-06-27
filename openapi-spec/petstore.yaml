@@ -23,7 +23,7 @@ servers:
   - url: /api/v3
 tags:
   - name: pet
-    description: Everything about your Pets
+    description: Everything about your Pets (CHANGED)
     externalDocs:
       description: Find out more
       url: http://swagger.io
@@ -101,11 +101,51 @@ paths:
                   $ref: '#/components/schemas/Pet'
         "400":
           description: Invalid status value
+        "500":
+          description: internal
       security:
         - petstore_auth:
             - write:pets
             - read:pets
   /pet/findByTags:
+    get:
+      tags:
+        - pet
+      summary: Finds Pets by tags
+      description: "Multiple tags can be provided with comma separated strings. Use\
+        \ tag1, tag2, tag3 for testing."
+      operationId: findPetsByTags
+      parameters:
+        - name: tags
+          in: query
+          description: Tags to filter by
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        "400":
+          description: Invalid tag value
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  /pet/filter:
     get:
       tags:
         - pet
@@ -162,9 +202,6 @@ paths:
         "200":
           description: successful operation
           content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Pet'
             application/json:
               schema:
                 $ref: '#/components/schemas/Pet'
@@ -204,33 +241,6 @@ paths:
       responses:
         "405":
           description: Invalid input
-      security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
-    delete:
-      tags:
-        - pet
-      summary: Deletes a pet
-      description: ""
-      operationId: deletePet
-      parameters:
-        - name: api_key
-          in: header
-          description: ""
-          required: false
-          schema:
-            type: string
-        - name: petId
-          in: path
-          description: Pet id to delete
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "400":
-          description: Invalid pet value
       security:
         - petstore_auth:
             - write:pets
